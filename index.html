@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+
+<html>
+ <head>
+	<style>
+	 body {
+		background-image: linear-gradient(to top, #000080, #000000);
+		margin: 0px;
+	 }
+	 
+	 #topBanner{
+	   background-color: lightgreen;
+	   font-size: 30px;
+	   text-align: center;
+	   height: 40px;
+	   padding-top: 5px;
+	   width: 100%;
+	   position: fixed;
+	   top: 0px;
+	 }
+
+
+	 #counterDisplay {
+		text-align: center;
+		color: yellow;
+		font-family: verdana;
+		font-size: 15px;
+		margin-left: 10px;
+	 }
+
+	 #alertBox {
+	  background-color: #FF6666;
+	  color: white;
+	  width: 100%;
+	  height: 50px;
+	  display: none;
+	  padding-top: 0px;
+	  margin-top: 0px;
+	 }
+	 
+	 #alertMessage {
+		color: white;
+	 }
+	 
+	 #alertTable {
+		align: center;
+		cellspacing: 10px;
+		width: 100%;
+		height: 50px;
+	 }
+	 
+	 .alertButton {
+	  background-color: #FFB2B2;
+	  border-width: 1px;
+	  border-color: #B2B2B2;
+	  width: 100px;
+	  height: 40px;
+	 
+	 }
+	 
+	 .alertButton:hover {
+	  color: white;
+	 }
+	 
+	 .button {
+		text-align: center;
+		display: inline-block;
+		border: none;
+		padding: 15px 32px;
+		float: left;
+		background-color: lightgreen;
+	 }
+	 
+	 .button:hover {
+		background-color: #F5FFFA;
+	 }
+	 
+	 .button:active {
+		box-shadow: 0 5px #666;
+		transform: translateY(4px);
+	 }
+	 
+	 .resetButton {
+		background-color: #F08080;
+		margin-left: 50px;
+		
+	 }
+	 
+	 #displayContainer {
+		width: 100%;
+		height: 20%;
+	 }
+	 
+	 #miniContainer {
+		height: 90%;
+		width: 49%;
+		float: left;
+		color: yellow;
+	 }
+	 #bodyContainer {
+		margin-top: 10px;
+	 }
+	 
+	 #woodCounter {
+		font-size: 25px;
+		font-weight: 5px;
+		color: yellow;
+		text-align: center;
+	 }
+	 
+	 #woodPerSecondCounter {
+		font-size: 15px;
+		font-weight: 3px;
+		color: yellow;
+		text-align: center;
+	 }
+	 
+	 #buttonContainer {
+		background-color: #FF8C19;
+		width: 100%;
+		height: 50px;
+		color: black;
+		border-radius: 3px;
+	 }
+	 
+	 //Generic format of upgrade buttons
+	 #buttonTable {
+		background-color:  #FF8C19;
+		border-width: 0px;
+		border-color: #FF8C19;
+		font-size: 12px;
+	 }
+	 
+	 .buttonWoodClicker {
+		align: center;
+		display: inline-block;
+		border: none;
+		width: 150px;
+		height: 150px;
+		background-image: url("log.png");
+		margin-top: 20px;
+		
+	 }
+	 
+	 @keyframes woodClickAnimation {
+		50% {transform: scale(0.4,0.4)}
+	 }
+	 
+	 .buttonWoodClicker:active {
+		animation-name: woodClickAnimation;
+		animation-duration: .1s;
+	 }
+	
+	p {
+		font-size: 12px;
+	}
+	
+	#devConsole {
+		margin-left: 220px;
+		text-align: center;
+		display: none;
+		background-color: gray;
+		color: yellow;
+		width: 300px;
+		height: 300px;
+		border: 1px solid red;
+		border-radius: 3px;
+	}
+	
+	#hideTreeFarm {
+		display: none;
+	}
+	#hideCBD {
+		display: none;
+	}
+	#hideWildFire {
+		display: none;
+	}
+	#hideTreeZapper {
+		display: none;
+	}
+	#hideTreeGiant {
+		display: none;
+	}
+	
+	#progressBar {
+		width: 100%;
+		background-color: grey;
+		margin-top: 15px;
+	}
+
+	#myProgress {
+		width: 1%;
+		height: 30px;
+		background-color: green;
+		color: white;
+		text-align: center;
+		text-shadow: 2px;
+		padding-top: 5px;
+	}
+	 
+	</style>
+ </head>
+ 
+
+ <title>Wood Clicker</title>
+ <body>
+ <div id="topBanner"><b>Wood Clicker</b></div>
+ <div id="bodyContainer">
+	
+	//progress bar
+	<div id="progressBar">
+		<div id="myProgress"></div>
+	</div>
+	
+	 //Alert pop-up
+	  <div id="alertBox">
+		<table id="alertTable">
+			<tr>
+				<th width="35%"></th>
+				<th width="25%"><p id="alertMessage">Error</p></th>
+				<th width="1%"><button class="alertButton" onclick="hideAlert()"><b>Close</b></button></th>
+				<th width="39%"></th>
+			</tr>
+		</table>
+	 </div>
+	 
+	 <div id="miniContainer">
+		<div id = "counterDisplay">
+			 <br>
+			 <p id="WoodCounter">You have 0 pieces of wood</p>
+			 <p id="WoodPerSecondCounter">You are gathering 0 Wood Per Second</p>
+			 
+			 <div><button class="buttonWoodClicker" onclick=woodClick()></button></div>
+		</div>
+		<br><br><br>
+		
+		<div id="devConsole">
+			<h1>Tester Console</h1>
+			<p> Enter the amount of wood you wanted added</p>
+			<input id="devUserInput">
+			<button type="button" onclick="devAddWood()">Submit</button> <br> <br>
+			<button class="button resetButton" onclick=reset()>Click here to Reset</button>
+		</div>
+		
+	 </div>
+	 
+	 
+	 <! Upgrade boxes and right side div>
+	 <div id="miniContainer">
+		<h1 align="center">Upgrades</h1>
+		
+		<div id = "buttonContainer">
+			<table id = "buttonTable">
+				<tr>
+					<th width = "50%">
+					<p id="woodCutterCounter">You have 0 wood cutters</p>
+					<p id="woodCutterCost">A new wood cutter costs 50 wood</p>
+					</th>
+					<th width = "50%"><button class="button" onclick=woodCutterClick()>Buy a Wood Cutter</button></th>
+				</tr>
+			</table>
+		</div>
+		<div id = "buttonContainer">
+			<table id = "buttonTable">
+				<tr>
+					<th width = "50%">
+					<p id="lumberCatCounter">You have 0 Lumber Cats</p>
+					<p id="lumberCatCost">lumber cat costs 150 wood</p>
+					</th>
+					<th width = "50%"><button class="button" onclick=lumberCatClick()>Buy a Lumber Cat</button></th>
+				</tr>
+			</table>
+		</div>
+		<div id = "buttonContainer">
+			<table id = "buttonTable">
+				<tr>
+					<th width = "50%">
+					<p id="treeFarmCounter">Unknown</p>
+					<p id="treeFarmCost">Unknown</p>
+					</th>
+					<th width = "50%"><button class="button" id="hideTreeFarm" onclick=treeFarmClick()>Buy a Tree Farm</button></th>
+				</tr>
+			</table>
+		</div>
+		<div id = "buttonContainer">
+			<table id = "buttonTable">
+				<tr>
+					<th width = "50%">
+					<p id="cdbCounter">Unknown</p>
+					<p id="cdbCost">Unknown</p>
+					</th>
+					<th width = "50%"><button class="button" id = "hideCBD" onclick=cdbClick()>Buy a Cat Deforestation Brigade</button></th>
+				</tr>
+			</table>
+		</div>
+		
+		<div id = "buttonContainer">
+			<table id = "buttonTable">
+				<tr>
+					<th width = "50%">
+					<p id="wildFireCounter">Unknown</p>
+					<p id="wildFireCost">Unknown</p>
+					</th>
+					<th width = "50%"><button class="button" id = "hideWildFire" onclick=wildFireClick()>Buy a wild fire</button></th>
+				</tr>
+			</table>
+		</div>
+		
+		<div id = "buttonContainer">
+			<table id = "buttonTable">
+				<tr>
+					<th width = "50%">
+					<p id="treeZapperCounter">Unknown</p>
+					<p id="treeZapperCost">Unknown</p>
+					</th>
+					<th width = "50%"><button class="button" id = "hideTreeZapper" onclick=treeZapperClick()>Buy a tree zapper</button></th>
+				</tr>
+			</table>
+		</div>
+		
+		<div id = "buttonContainer">
+			<table id = "buttonTable">
+				<tr>
+					<th width = "50%">
+					<p id="treeGiantCounter">Unknown</p>
+					<p id="treeGiantCost">Unknown</p>
+					</th>
+					<th width = "50%"><button class="button" id = "hideTreeGiant" onclick=treeGiantClick()>Buy a tree giant</button></th>
+				</tr>
+			</table>
+		</div>
+		
+	 </div>
+</div>
+ </body>
+
+ 
+ <script>
+    var wood = 0;
+	var woodPerSecond = 0;
+	var woodClickMultiplier = 1;
+	var woodCutters = 0;
+	var woodCutterCost = 50;
+	var lumberCat = 0;
+	var lumberCatCost = 150;
+	var treeFarms = 0;
+	var treeFarmCost = 600;
+	//cbd = cat deforestation brigade
+	var cdb = 0;
+	var cdbCost = 2800;
+	var wildFire = 0;
+	var wildFireCost = 7500;
+	var treeZapper = 0;
+	var treeZapperCost = 24000;
+	var treeGiant = 0;
+	var treeGiantCost = 75000;
+	var alertMessage = "null";
+	var nextNewUpgrade = 150;
+	
+   //Adds wood depending on the amount put in the input box for the tester box.
+   function devAddWood() {
+	var x = 0;
+	x = parseFloat(document.getElementById("devUserInput").value);
+	
+	//isNaN means if x is not a number
+	if(isNaN(x) != true){
+		wood += x;
+		refresh();
+	} else {
+		alertMessage = "Please enter a real value into Wood Add box.";
+		showAlert();
+	}
+   }
+   
+   //Wood cutter onclick function
+   function woodCutterClick(){
+		if (wood >= woodCutterCost){
+			wood -= woodCutterCost;
+			woodCutters += 1;
+			woodCutterCost *= 1.25;
+			woodCutterCost = Math.round(woodCutterCost);
+			woodClickMultiplier += 1;
+			refresh();
+		} else {
+			alertMessage = "You need more wood to buy a wood cutter";
+			showAlert();
+		}
+   }
+   
+   //tree giant on click function
+   function treeGiantClick(){
+		if (wood >= treeGiantCost){
+			wood -= treeGiantCost;
+			treeGiant += 1;
+			woodPerSecond += 150;
+			treeGiantCost *= 1.25;
+			treeGiantCost = Math.round(treeGiantCost);
+			refresh();
+			if (treeGiant == 1){
+				setInterval(treeGiantAutoClick, 2000);
+			}
+		} else {
+			alertMessage = "You need more wood to buy a tree giant";
+			showAlert();
+		}
+   }
+   
+   function treeGiantAutoClick(){
+		wood = Math.round(wood);
+		wood += (treeGiant * 150);
+		refresh();
+   }
+   
+   //tree zapper on click function
+   function treeZapperClick(){
+		if (wood >= treeZapper){
+			wood -= treeZapperCost;
+			treeZapper += 1;
+			treeZapperCost *= 1.25;
+			woodPerSecond += 60;
+			treeZapperCost = Math.round(treeZapperCost);
+			refresh();
+			if (treeZapper == 1){
+				setInterval(treeZapperAutoClick, 2000);
+			}
+		} else {
+			alertMessage = "You need more wood to buy a tree zapper";
+			showAlert();
+		}
+   }
+   //tree zapper auto click function
+   function treeZapperAutoClick(){
+		wood = Math.round(wood);
+		wood += (treeZapper * 60);
+		refresh();
+   }
+   
+   //wild fire on click function
+   function wildFireClick(){
+		if (wood >= wildFireCost){
+			wood -= wildFireCost;
+			wildFire += 1;
+			woodPerSecond += 30;
+			wildFireCost *= 1.25;
+			wildFireCost = Math.round(wildFireCost);
+			refresh();
+			if (wildFire == 1){
+				setInterval(wildFireAutoClick, 2000);
+			}
+		} else {
+			alertMessage = "You need more wood to buy a wild fire";
+			showAlert();
+		}
+   }
+   
+   //wild fire autoclick
+   function wildFireAutoClick(){
+		wood = Math.round(wood);
+		wood += (wildFire * 30);
+		refresh();
+   }
+   
+   //Cat deforestation bridgade on click function
+   function cdbClick(){
+		if (wood >= cdbCost){
+			wood -= cdbCost;
+			cdb += 1;
+			cdbCost *= 1.25;
+			woodPerSecond += 15;
+			cdbCost = Math.round(cdbCost);
+			refresh();
+			if (cdb == 1){
+				setInterval(cdbAutoClick, 2000);
+			}
+		} else {
+			alertMessage = "You need more wood to buy a cat deforestation brigade";
+			showAlert();
+		}
+   }
+   
+   //Cat deforestation brigate autoclick function
+   function cdbAutoClick(){
+		wood = Math.round(wood);
+		wood += (cdb * 15);
+		refresh();
+   }
+   
+   
+   //tree farm on click function
+   function treeFarmClick(){
+		if (wood >= treeFarmCost){
+			wood -= treeFarmCost;
+			treeFarms += 1;
+			woodPerSecond += 5;
+			treeFarmCost *= 1.25;
+			treeFarmCost = Math.round(treeFarmCost);
+			refresh();
+			if (treeFarms == 1){
+				setInterval(treeFarmAutoClick, 2000);
+			}
+		} else {
+			alertMessage = "You need more wood to buy a tree farm";
+			showAlert();
+		}
+   }
+   
+   //tree farm autoclick function
+   function treeFarmAutoClick(){
+		wood = Math.round(wood);
+		wood += (treeFarms * 5);
+		refresh();
+   }
+ 
+    //lumber cat on click function
+   function lumberCatClick(){
+        if (wood >= lumberCatCost) {
+			wood -= lumberCatCost;
+			lumberCat += 1;
+			woodPerSecond += 1;
+			lumberCatCost *= 1.25;
+			lumberCatCost = Math.round(lumberCatCost);
+			refresh();
+			if (lumberCat == 1){
+				setInterval(lumberCatAutoClick, 2000);
+			}
+		} else {
+			alertMessage = "You don't have enough wood to buy a lumber cat";
+			showAlert();
+		}
+    }
+
+   function lumberCatAutoClick(){
+		wood = Math.round(wood);
+		wood += lumberCat;
+		refresh();
+   }
+
+   
+   //Onclick Adds 1 to wood variable
+   function woodClick(){ 
+    wood += 1 * woodClickMultiplier;
+    refresh();
+   }
+   
+  //Resets stats back to zero
+  function reset(){
+	wood = 0;
+	woodPerSecond = 0;
+	woodClickMultiplier = 1;
+	woodCutters = 0;
+	woodCutterCost = 50;
+	lumberCat = 0;
+	lumberCatCost = 150;
+	treeFarms = 0;
+	treeFarmCost = 600;
+	cdb = 0;
+	cdbCost = 2800;
+	wildFire = 0;
+	wildFireCost = 7500;
+	treeZapper = 0;
+	treeZapperCost = 24000;
+	treeGiant = 0;
+	treeGiantCost = 75000;
+	nextNewUpgrade = 150;
+	refresh();
+	alertMessage = "Your game has been reset";
+	showAlert();
+  }
+   
+  //Shows alert div element
+  function showAlert(){
+	document.getElementById("alertBox").style.display = "block";
+	document.getElementById("alertMessage").innerHTML = alertMessage;
+  }
+ 
+ //Hides alert div Element
+ function hideAlert(){
+	document.getElementById("alertBox").style.display = "none";
+ }
+ 
+ //adjusts progress bar to new wood values;
+ function moveProgressBar(){
+	var element = document.getElementById("myProgress");
+	
+	var width = 0;
+	
+	if(wood > 0){
+		width = wood / (nextNewUpgrade/100);
+	}
+	
+	if(width >= 100){
+		if(nextNewUpgrade == 150){
+			alertMessage = "You can now purchase lumber cats!"
+			showAlert();
+			width = 0;
+			nextNewUpgrade = 600;
+		}
+	}
+	
+	//adjusts display
+	var displayWidth = Math.round(width);
+	element.style.width = width + '%';
+	if(width >= 10){
+		element.innerHTML = displayWidth + " " + '%' + " to next upgrade";
+	}
+ }
+
+  //refreshes the display boards to be accurate
+  function refresh() {
+	 
+	moveProgressBar();
+	
+	 
+	 
+	 document.getElementById("WoodCounter").textContent = "You have " + wood + "  pieces of wood.";
+	 document.getElementById("WoodPerSecondCounter").textContent = "You are gathering " + woodPerSecond + " Wood Per Second";
+	 
+	 document.getElementById("woodCutterCounter").textContent = "You have " + woodCutters + " wood cutters";
+	 document.getElementById("woodCutterCost").textContent = "A new wood cutter costs " + woodCutterCost + " wood";
+	 document.getElementById("lumberCatCounter").textContent = "You have " + lumberCat + " lumber cats.";
+	 document.getElementById("lumberCatCost").textContent = "Lumber Cat costs " + lumberCatCost + " wood";
+	 
+	if(wood >= 500 || treeFarms > 0){
+		 document.getElementById("treeFarmCounter").textContent = "You have " + treeFarms + " tree farms";
+		 document.getElementById("treeFarmCost").textContent = "A new tree farm costs " + treeFarmCost + " wood";
+		 document.getElementById("hideTreeFarm").style.display = "block";
+	}
+	if (wood >= 2500 || cbd > 0){
+		document.getElementById("cdbCounter").textContent = "You have " + cdb + " cat deforestation brigades";
+		document.getElementById("cdbCost").textContent = "A new cat deforestation brigade costs " + cdbCost + " wood";
+		document.getElementById("hideCBD").style.display = "block";
+	}
+	if (wood >= 7250 || wildFire > 0){
+		document.getElementById("wildFireCounter").textContent = "You have " + wildFire + " wild fires";
+		document.getElementById("wildFireCost").textContent = "A new wild fire costs " + wildFireCost + " wood";
+		document.getElementById("hideWildFire").style.display = "block";
+	}
+	if (wood >= 22000 || treeZapper > 0){
+		document.getElementById("treeZapperCounter").textContent = "You have " + treeZapper + " tree zappers";
+		document.getElementById("treeZapperCost").textContent = "A new wild fire costs " + treeZapperCost + " wood";
+		document.getElementById("hideTreeZapper").style.display = "block";
+	}
+	if (wood >= 70000){
+		document.getElementById("treeGiantCounter").textContent = "You have " + treeGiant + " tree giants";
+		document.getElementById("treeGiantCost").textContent = "A new tree giant costs " + treeGiantCost + " wood";
+		document.getElementById("hideTreeGiant").style.display = "block";
+	}
+  }
+ </script>
+</html>
